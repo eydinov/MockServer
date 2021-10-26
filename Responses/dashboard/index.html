@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Mock server</title>
+    <style type="text/css">
+        BODY  {
+            background-color:white;
+            color:#000000;
+            font-family: Verdana, Helvetica, Arial, "Lucida Grande", sans-serif; 
+            margin: 0;
+			padding: 0;
+            font-size: 12px;
+        }
+        H1 {
+            background-color: #036;
+            color: #FFF;
+            font-family: Tahoma;
+            font-size: 26px;
+            font-weight: normal;
+            margin: 0;
+            padding: 10px ;
+        }
+        .content {
+            margin: 20px;
+            padding-bottom: 2em;
+        }
+        UL {
+            margin: 10px 0 0 10px;
+			padding: 0px 0px 0px 10px;
+        }
+        LI {
+			clear: left;
+            margin-top: 10px;
+        }
+        A {
+            color: #369;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        A:hover {
+            color: #C30;
+            text-decoration: underline;
+        }
+		.operations TABLE {
+			margin-left: 1.5em;
+            border-collapse: collapse;
+		}
+		TABLE, TR, TH, TD {
+            border: none;
+		}
+		.operations TH {
+            text-align: left;
+            font-weight: normal;
+            line-height: 18px;
+			min-width: 27em;
+            white-space: nowrap;
+		}
+		.operations TD {
+            font-size: 11px;
+            line-height: 18px;
+            font-weight: bold;
+            color: #CCC;
+			padding-left: 1.5em;
+		}
+        table, th, td {
+            border: 1px solid #f1f1f1;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            background-color: #F9F9F9;
+            padding: 10px;
+        }
+        td{
+            padding: 0px 5px 0px 5px;
+        }
+        .label {
+            padding: 6px 8px;
+            margin: 0px 5px;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+        }
+        .get_label{
+            background-color:royalblue;
+        }
+        .post_label{
+            background-color:seagreen;
+           
+        }
+        .put_label{
+            background-color:teal;
+        }
+        .delete_label{
+            background-color:brown;
+        }
+        .body_text{
+            border-radius: 3px;
+            background-color:#f9f9f9;
+            padding: 7px;
+            border-style: solid;
+            border-color: #f3f3f3;
+            border-width: 1px;
+        }
+        .body_header{
+           padding: 0px 5px;
+        }
+        </style>
+</head>
+	
+	
+	<body>
+		<h1>Mock Server</h1>
+        <div class="content">
+            <p>
+                The following mocked requests are implemented.
+            </p>
+		<table>
+            <tbody>
+                <tr>
+                <th>Method</th>
+                <th>Path</th>
+                <th>Description</th>
+                <th>Authorization</th>
+                <th>Response</th>
+                </tr>
+                _options_
+            </tbody>
+		
+		</table>
+        </div>
+    </body>
+</html>

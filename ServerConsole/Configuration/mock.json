@@ -1,0 +1,119 @@
+{
+  "RequestCollection": [
+    {
+      "Name": "Mock Server dashboard",
+      "Request": {
+        "Method": "GET",
+        "Path": "/"
+      },
+      "Response": {
+        "Status": 200,
+        "Headers": {
+          "Content-Type": "text/html; charset=UTF-8"
+        },
+        "Body": {
+          "Type": "external",
+          "Props": {
+            "Assembly": "\\plugins\\dashboard\\dashboard.dll",
+            "Class": "Dashboard",
+            "Page": "\\responses\\dashboard\\index.html"
+          }
+        },
+        "Delay": 0
+      }
+    },
+    {
+      "Name": "Get order details",
+      "Request": {
+        "Method": "GET",
+        "PathRegex": "/payment/v1/stores/(\\d+)/customer-order/(\\d+)$"
+      },
+      "Response": {
+        "Status": 200,
+        "Headers": {
+          "Content-Type": "application/json"
+        },
+        "Body": {
+          "Type": "file",
+          "Props": {
+            "FileName": "\\responses\\orders\\$1_$2.json"
+          }
+        },
+        "Delay": 0
+      }
+    },
+    {
+      "Name": "Some endpoint protected with Basic authorization",
+      "Request": {
+        "Method": "GET",
+        "Path": "/HttpService/hs/Contractors/Contractor",
+        "Authorization": [
+          {
+            "Schema": "Basic",
+            "UnauthorizedStatus": 401,
+            "UnauthorizedMessage": "Not authorized",
+            "Claims": {
+              "UserName": "TestAdmin",
+              "Password": "Qwerty123",
+              "Realm": "Test:realm:server"
+            }
+          }
+        ]
+      },
+      "Response": {
+        "Status": 200,
+        "Headers": {
+          "Content-Type": "text/text; charset=UTF-8"
+        },
+        "Body": {
+          "Type": "inline",
+          "Props": {
+            "Body": "customerID = 000-700001; customerName = OOO РОГА И КОПЫТА; customerFullName = ПКФ РОГА И КОПЫТА ООО; customerClass = Legal; customerBIN = 9999999999; customerCountry = РОССИЯ; customerAdress = РОССИЯ, г.Москва, ул. 2-я Несуществующая, д.4; customerGovernment = False; customerIIK = ; customerPaymentTPropset = БП0000333;"
+          }
+        },
+        "Delay": 0
+      }
+    },
+    {
+      "Name": "ADFS OAuth2 server",
+      "Request": {
+        "Method": "POST",
+        "Path": "/adfs/oauth2/token",
+        "Props": {
+          "grant_type": "password",
+          "username": "RU\\service-accoount",
+          "password": "4USLr3Cnzmpn76vFd9S8jkLah",
+          "client_id": "030f0c52-792a-4086-ab25-9565dcebd350",
+          "client_secret": "0_T-Gq-HY8vcfFTjIZkWrddimfUIACgm7PEkEPoI",
+          "resource": "https://domain.resource.com/api/data/v1.0"
+        }
+      },
+      "Response": {
+        "Status": 200,
+        "Headers": {
+          "Content-Type": "application/json"
+        },
+        "Body": {
+          "Type": "external",
+          "Props": {
+            "Assembly": "\\plugins\\oauth\\OAuth.dll",
+            "Class": "OAuth",
+            "Body": "{\"access_token\": \"{access_token}\", \"token_type\": \"bearer\", \"expires_in\": {expires_in}, \"resource\": \"{aud}\", \"refresh_token\": \"{refresh_token}\", \"refresh_token_expires_in\": {refresh_expires_in}, \"id_token\": \"{token}\"}",
+            "Claims": "{\"appid\":\"{appid}\", \"apptype\":\"{apptype}\", \"authmethod\":\"{authmethod}\", \"unique_name\":\"{unique_name}\", \"upn\":\"{upn}\"}"
+          }
+        },
+        "Delay": 0,
+        "Props": {
+          "aud": "https://aud-server.com/api/data/v1.0/",
+          "iss": "http://adfs.domain.ru/adfs/services/trust",
+          "exp": "3600",
+          "appid": "030f0c52-792a-4086-ab25-9565dcebd350",
+          "apptype": "Confidential",
+          "authmethod": "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport",
+          "unique_name": "RU\\service-accoount",
+          "upn": "service-accoount@domain.com"
+        }
+      }
+    }
+  ]
+}

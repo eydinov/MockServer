@@ -1,0 +1,82 @@
+{
+  "BuCode": "009",
+  "StoreCode": 35,
+  "CustomerOrderNumber": "2161190600113165",
+  "CreationChannel": {
+    "Type": "IN_STORE",
+    "Application": "PAYMENT",
+    "StoreCode": 35
+  },
+  "Customer": {
+    "CustomerNumber": "1870297",
+    "CustomerType": "NATURAL_PERSON",
+    "LastName": "Депп",
+    "FirstName": "Джонни"
+  },
+  "OrderStatus": "NOT_VALIDATED",
+  "TotalAmountIncludingVATAndDiscounts": {
+    "Amount": 2145.5500
+  },
+  "TotalAmountIncludingVAT": {
+    "Amount": 2145.5500
+  },
+  "ProposedDepositAmount": {
+    "Amount": 2145.5500
+  },
+  "Lines": [
+    {
+      "LineStatus": "NOT_VALIDATED",
+      "LineId": "429fc625-4fe6-489f-9198-39acb100f4fe",
+      "LineNumber": 1,
+      "ProductCode": "10008807",
+      "ProductDesignation": "Just a good 1",
+      "ComplementaryProductDesignation": "Just a good 1",
+      "Quantity": 7.00,
+      "TotalAmountIncludingVATAndDiscounts": {
+        "Amount": 972.3000
+      },
+      "TotalAmountIncludingVAT": {
+        "Amount": 972.3000
+      },
+      "CustomerSellingPriceIncludingVAT": {
+        "Amount": 138.90
+      }
+    },
+    {
+      "LineStatus": "NOT_VALIDATED",
+      "LineId": "70a3ffcb-cb59-46da-8ab9-c98e0ac5c461",
+      "LineNumber": 2,
+      "ProductCode": "10009084",
+      "ProductDesignation": "Just a good 2",
+      "ComplementaryProductDesignation": "Just a good 2",
+      "Quantity": 5.00,
+      "TotalAmountIncludingVATAndDiscounts": {
+        "Amount": 173.2500
+      },
+      "TotalAmountIncludingVAT": {
+        "Amount": 173.2500
+      },
+      "CustomerSellingPriceIncludingVAT": {
+        "Amount": 34.65
+      }
+    },
+    {
+      "LineStatus": "NOT_VALIDATED",
+      "LineId": "2b122036-e33b-4ebc-b8b2-c63dc221c32e",
+      "LineNumber": 3,
+      "ProductCode": "49022120",
+      "ProductDesignation": "Delivery of goods",
+      "ComplementaryProductDesignation": "Delivery of goods",
+      "Quantity": 1.00,
+      "TotalAmountIncludingVATAndDiscounts": {
+        "Amount": 1000.0000
+      },
+      "TotalAmountIncludingVAT": {
+        "Amount": 1000.0000
+      },
+      "CustomerSellingPriceIncludingVAT": {
+        "Amount": 1000.00
+      }
+    }
+  ]
+}
