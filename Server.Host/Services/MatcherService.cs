@@ -75,7 +75,7 @@ namespace ServerHost.Services
         {
             IResponseMatcher response = option.Response.Body?.Type?.ToLower() switch
             {
-                "external" => ActivatorUtilities.CreateInstance<AssemblyMatcher>(_provider, option),
+                "assembly" => ActivatorUtilities.CreateInstance<AssemblyMatcher>(_provider, option),
                 "file" => ActivatorUtilities.CreateInstance<FileMatcher>(_provider, option),
                 _ => ActivatorUtilities.CreateInstance<ResponseMatcher>(_provider, option)
             };

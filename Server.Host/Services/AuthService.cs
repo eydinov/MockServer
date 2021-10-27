@@ -9,13 +9,13 @@ namespace ServerHost.Services
     {
         readonly IBasicAuthorizationHandler _basicHandler;
         readonly IBearerAuthorizationHandler _bearerHandler;
-        readonly IApiKeyAuthorizationHandler _apiKeyHandler;
+        readonly IHeaderAuthorizationHandler _headerHandler;
 
-        public AuthService(IBasicAuthorizationHandler basicHandler, IBearerAuthorizationHandler bearerHandler, IApiKeyAuthorizationHandler apiKeyHandler)
+        public AuthService(IBasicAuthorizationHandler basicHandler, IBearerAuthorizationHandler bearerHandler, IHeaderAuthorizationHandler headerHandler)
         {
             _basicHandler = basicHandler;
             _bearerHandler = bearerHandler;
-            _apiKeyHandler = apiKeyHandler;
+            _headerHandler = headerHandler;
         }
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace ServerHost.Services
                     case "bearer":
                         _bearerHandler.Handle(context, auth);
                         break;
-                    case "apikey":
-                        _apiKeyHandler.Handle(context, auth);
+                    case "header":
+                        _headerHandler.Handle(context, auth);
                         break;
                     default:
                         break;

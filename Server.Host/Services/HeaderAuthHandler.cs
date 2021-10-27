@@ -9,11 +9,11 @@ using ServerHost.Extensions;
 
 namespace ServerHost.Services
 {
-    public class ApiKeyAuthHandler : IApiKeyAuthorizationHandler
+    public class HeaderAuthHandler : IHeaderAuthorizationHandler
     {
-        readonly ILogger<ApiKeyAuthHandler> _logger;
+        readonly ILogger<HeaderAuthHandler> _logger;
 
-        public ApiKeyAuthHandler(ILogger<ApiKeyAuthHandler> logger)
+        public HeaderAuthHandler(ILogger<HeaderAuthHandler> logger)
         {
             _logger = logger;
         }

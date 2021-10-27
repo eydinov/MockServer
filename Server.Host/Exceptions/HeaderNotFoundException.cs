@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ServerHost.Exceptions
 {
-    public class ApiKeyNotFoundException : Exception
+    public class HeaderNotFoundException : Exception
     {
-        public ApiKeyNotFoundException(string message = null) : base(message)
+        public HeaderNotFoundException(string message = null) : base(message)
         {
         }
     }

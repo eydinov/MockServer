@@ -17,7 +17,7 @@ namespace MockServer.Environment.Abstractions
 
     }
 
-    public interface IApiKeyAuthorizationHandler : IAuthorizationHandler
+    public interface IHeaderAuthorizationHandler : IAuthorizationHandler
     {
 
     }

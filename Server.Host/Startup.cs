@@ -25,7 +25,7 @@ namespace ServerHost
             services.AddSingleton<IAuthorizationService, AuthService>();
             services.AddSingleton<IBasicAuthorizationHandler, BasicAuthHandler>();
             services.AddSingleton<IBearerAuthorizationHandler, BearerAuthHandler>();
-            services.AddSingleton<IApiKeyAuthorizationHandler, ApiKeyAuthHandler>();
+            services.AddSingleton<IHeaderAuthorizationHandler, HeaderAuthHandler>();
         }
 
         public static void Configure(IApplicationBuilder app)

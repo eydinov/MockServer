@@ -12,7 +12,7 @@
           "Content-Type": "text/html; charset=UTF-8"
         },
         "Body": {
-          "Type": "external",
+          "Type": "assembly",
           "Props": {
             "Assembly": "\\plugins\\dashboard\\dashboard.dll",
             "Class": "Dashboard",
@@ -26,7 +26,7 @@
       "Name": "Get order details",
       "Request": {
         "Method": "GET",
-        "PathRegex": "/payment/v1/stores/(\\d+)/customer-order/(\\d+)$"
+        "PathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
       },
       "Response": {
         "Status": 200,
@@ -43,19 +43,19 @@
       }
     },
     {
-      "Name": "Some endpoint protected with Basic authorization",
+      "Name": "Endpoint secured by Basic authorization",
       "Request": {
         "Method": "GET",
-        "Path": "/HttpService/hs/Contractors/Contractor",
+        "Path": "/HttpService/Contractor",
         "Authorization": [
           {
             "Schema": "Basic",
             "UnauthorizedStatus": 401,
             "UnauthorizedMessage": "Not authorized",
             "Claims": {
-              "UserName": "TestAdmin",
+              "UserName": "testadmin",
               "Password": "Qwerty123",
-              "Realm": "Test:realm:server"
+              "Realm": "test:realm:server"
             }
           }
         ]
@@ -68,24 +68,23 @@
         "Body": {
           "Type": "inline",
           "Props": {
-            "Body": "customerID = 000-700001; customerName = OOO РОГА И КОПЫТА; customerFullName = ПКФ РОГА И КОПЫТА ООО; customerClass = Legal; customerBIN = 9999999999; customerCountry = РОССИЯ; customerAdress = РОССИЯ, г.Москва, ул. 2-я Несуществующая, д.4; customerGovernment = False; customerIIK = ; customerPaymentTPropset = БП0000333;"
+            "Body": "customerID = 6231239765420; customerName = OOO РОГА И КОПЫТА; customerFullName = ПКФ РОГА И КОПЫТА ООО; customerClass = Legal; customerBIN = 9999999999; customerCountry = РОССИЯ; customerAdress = РОССИЯ, г.Москва, ул. 2-я Несуществующая, д.4; customerGovernment = False; customerIIK = 1000654123865; customerPaymentPropset = БП0000333;"
           }
         },
         "Delay": 0
       }
     },
     {
-      "Name": "ADFS OAuth2 server",
+      "Name": "Mock OAuth2 server",
       "Request": {
         "Method": "POST",
-        "Path": "/adfs/oauth2/token",
+        "Path": "/oauth2/token",
         "Props": {
           "grant_type": "password",
-          "username": "RU\\service-accoount",
-          "password": "4USLr3Cnzmpn76vFd9S8jkLah",
+          "username": "testadmin",
+          "password": "Qwerty123",
           "client_id": "030f0c52-792a-4086-ab25-9565dcebd350",
-          "client_secret": "0_T-Gq-HY8vcfFTjIZkWrddimfUIACgm7PEkEPoI",
-          "resource": "https://domain.resource.com/api/data/v1.0"
+          "client_secret": "0_T-Gq-HY8vcfFTjIZkWrddimfUIACgm7PEkEPoI"
         }
       },
       "Response": {
@@ -94,25 +93,64 @@
           "Content-Type": "application/json"
         },
         "Body": {
-          "Type": "external",
+          "Type": "assembly",
           "Props": {
             "Assembly": "\\plugins\\oauth\\OAuth.dll",
             "Class": "OAuth",
-            "Body": "{\"access_token\": \"{access_token}\", \"token_type\": \"bearer\", \"expires_in\": {expires_in}, \"resource\": \"{aud}\", \"refresh_token\": \"{refresh_token}\", \"refresh_token_expires_in\": {refresh_expires_in}, \"id_token\": \"{token}\"}",
+            "Body": "{\"access_token\": \"{access_token}\", \"token_type\": \"bearer\", \"expires_in\": {expires_in}, \"resource\": \"{aud}\", \"refresh_token\": \"{refresh_token}\", \"refresh_token_expires_in\": {refresh_expires_in}}",
             "Claims": "{\"appid\":\"{appid}\", \"apptype\":\"{apptype}\", \"authmethod\":\"{authmethod}\", \"unique_name\":\"{unique_name}\", \"upn\":\"{upn}\"}"
           }
         },
         "Delay": 0,
         "Props": {
-          "aud": "https://aud-server.com/api/data/v1.0/",
-          "iss": "http://adfs.domain.ru/adfs/services/trust",
+          "aud": "https://oauth2server/api",
+          "iss": "http://oauth2server/services/trust",
           "exp": "3600",
           "appid": "030f0c52-792a-4086-ab25-9565dcebd350",
           "apptype": "Confidential",
           "authmethod": "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport",
-          "unique_name": "RU\\service-accoount",
-          "upn": "service-accoount@domain.com"
+          "unique_name": "testadmin",
+          "upn": "testadmin@mycompany.com"
         }
+      }
+    },
+    {
+      "Name": "Weather endpoint secured by Bearear and Header authorizations",
+      "Request": {
+        "Method": "GET",
+        "PathRegex": "/api/weather/city/([a-zA-Z]+)$",
+        "Authorization": [
+          {
+            "Schema": "Header",
+            "UnauthorizedStatus": 401,
+            "UnauthorizedMessage": "{\"fault\":{\"faultstring\":\"Failed to resolve API Key variable request.header.x-api-key\",\"detail\":{\"errorcode\":\"steps.oauth.v2.FailedToResolveAPIKey\"}}}",
+            "Claims": {
+              "x-api-key": "HFL6juGtPN8r2ZgTaimwtzU4z8tqdQic"
+            }
+          },
+          {
+            "Schema": "Bearer",
+            "UnauthorizedStatus": 401,
+            "UnauthorizedMessage": "HTTP Error 401 - Unauthorized: Access is denied",
+            "Claims": {
+              "appid": "030f0c52-792a-4086-ab25-9565dcebd350",
+              "unique_name": "testadmin"
+            }
+          }
+        ]
+      },
+      "Response": {
+        "Status": 200,
+        "Headers": {
+          "Content-Type": "application/json"
+        },
+        "Body": {
+          "Type": "inline",
+          "Props": {
+            "Body": "{\"forecasts\":[{\"day\":\"Sun\",\"date\":1547366400,\"low\":48,\"high\":58,\"text\":\"Rain\",\"code\":12},{\"day\":\"Mon\",\"date\":1547452800,\"low\":47,\"high\":58,\"text\":\"Rain\",\"code\":12},{\"day\":\"Tue\",\"date\":1547539200,\"low\":46,\"high\":59,\"text\":\"Scattered Showers\",\"code\":39},{\"day\":\"Wed\",\"date\":1547625600,\"low\":49,\"high\":56,\"text\":\"Rain\",\"code\":12},{\"day\":\"Thu\",\"date\":1547712000,\"low\":49,\"high\":59,\"text\":\"Scattered Showers\",\"code\":39},{\"day\":\"Fri\",\"date\":1547798400,\"low\":48,\"high\":61,\"text\":\"Showers\",\"code\":11},{\"day\":\"Sat\",\"date\":1547884800,\"low\":47,\"high\":62,\"text\":\"Rain\",\"code\":12}]}"
+          }
+        },
+        "Delay": 0
       }
     }
   ]

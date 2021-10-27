@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if not exist $(SolutionDir)ServerConsole\bin\Debug\net5.0\responses (&#xD;&#xA;mkdir $(SolutionDir)ServerConsole\bin\Debug\net5.0\responses &#xD;&#xA;)&#xD;&#xA;xcopy C:\Temp\development\MockServer\Responses C:\Temp\development\MockServer\\ServerConsole\bin\Debug\net5.0\responses /E /Y&#xD;&#xA;" />
+    <Exec Command="if not exist $(SolutionDir)ServerConsole\bin\Debug\net5.0\responses (&#xD;&#xA;mkdir $(SolutionDir)ServerConsole\bin\Debug\net5.0\responses &#xD;&#xA;)&#xD;&#xA;xcopy $(SolutionDir)Responses $(SolutionDir)ServerConsole\bin\Debug\net5.0\responses /E /Y&#xD;&#xA;" />
   </Target>
 
 </Project>
