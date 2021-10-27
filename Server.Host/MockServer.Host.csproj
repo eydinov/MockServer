@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abstractions\MockServer.Environment.csproj" />
+    <ProjectReference Include="..\Environment\MockServer.Environment.csproj" />
   </ItemGroup>
 
 </Project>

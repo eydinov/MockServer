@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Server.Host\ServerHost.csproj" />
+    <ProjectReference Include="..\Server.Host\MockServer.Host.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if not exist $(SolutionDir)ServerConsole\bin\Debug\net5.0\responses (&#xD;&#xA;mkdir $(SolutionDir)ServerConsole\bin\Debug\net5.0\responses &#xD;&#xA;)&#xD;&#xA;xcopy $(SolutionDir)Responses $(SolutionDir)ServerConsole\bin\Debug\net5.0\responses /E /Y&#xD;&#xA;" />
+    <Exec Command="if not exist $(SolutionDir)Server.Console\bin\Debug\net5.0\responses (&#xD;&#xA;mkdir $(SolutionDir)Server.Console\bin\Debug\net5.0\responses &#xD;&#xA;)&#xD;&#xA;xcopy $(SolutionDir)Responses $(SolutionDir)Server.Console\bin\Debug\net5.0\responses /E /Y&#xD;&#xA;" />
   </Target>
 
 </Project>

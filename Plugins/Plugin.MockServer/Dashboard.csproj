@@ -10,11 +10,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Abstractions\MockServer.Environment.csproj" />
+    <ProjectReference Include="..\..\Environment\MockServer.Environment.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="mkdir  $(SolutionDir)\ServerConsole\bin\Debug\net5.0\plugins\dashboard&#xD;&#xA;copy /Y $(TargetPath) $(SolutionDir)\ServerConsole\bin\Debug\net5.0\plugins\dashboard\$(TargetFileName)" />
+    <Exec Command="mkdir  $(SolutionDir)\Server.Console\bin\Debug\net5.0\plugins\dashboard&#xD;&#xA;copy /Y $(TargetPath) $(SolutionDir)\Server.Console\bin\Debug\net5.0\plugins\dashboard\$(TargetFileName)" />
   </Target>
 
 </Project>

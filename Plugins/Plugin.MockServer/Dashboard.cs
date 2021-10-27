@@ -83,7 +83,7 @@ namespace Plugin.MockServer
         {
             switch (body?.Type?.ToLower())
             {
-                case "external":
+                case "assembly":
                     return $"Response is handled by the plugin '{body.Props["Assembly"]}'";
                 case "file":
                     return $"Response body is retrieved from the file '{body.Props["FileName"]}'";
