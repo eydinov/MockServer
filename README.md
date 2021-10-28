@@ -69,7 +69,7 @@ With this option MockServer simply compares whether the METHOD and PATH configur
 
 ```json
 {
-	"name": "Test mock movie endpoint",
+	"name": "Mock movie endpoint",
 	"request": {
 		"method": "GET",
 		"path": "/api/result"
@@ -97,7 +97,7 @@ With this option regular expressions can be used to match the PATH. If MockServe
 
 ```json
 {
-	"name": "Test mock endpoint with regex",
+	"name": "Mock endpoint with PathRegex",
 	"request": {
 		"method": "GET",
 		"pathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
@@ -123,7 +123,7 @@ With PathRegex it is also possible to use all found matches and substitute the r
 
 ```json
 {
-	"name": "Test mock endpoint with regex",
+	"name": "Mock endpoint with PathRegex",
 	"request": {
 		"method": "GET",
 		"pathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
@@ -192,11 +192,11 @@ With body type = "file" the props "fileName" must be defined.
       }
 ```
 
-With using PathRegex it is also possible to define filename with regex replacement string like this:
+With using PathRegex it is also possible to define filename with regex replacement string like in example below. This option allows to define different set of responses without the need to modify mock.json file
 
 ```json
 {
-	"name": "Test mock endpoint with regex",
+	"name": "Mock endpoint with file response type and PathRegex",
 	"request": {
 		"method": "GET",
 		"pathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
