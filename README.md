@@ -65,7 +65,7 @@ MockServer has an inbuilt UI that can be used to view the list of mocked service
 ## Matching options
 
 ### Matching by Method and Path
-With this option MockServer simply compares whether the Method and PATH configured in mock.json file match the URL client requested. If they are equal the response will be returned.
+With this option MockServer simply compares whether the METHOD and PATH configured in mock.json file match the METHOD and URL client app requested. If they are equal the response will be returned.
 
 ```json
 {
@@ -93,7 +93,7 @@ With this option MockServer simply compares whether the Method and PATH configur
 ![path](https://user-images.githubusercontent.com/93197903/139099728-8f6bfc3c-5fc0-4a26-90dc-c9c11a289984.png)
 
 ### Matching by Method and PathRegex
-With this option you can use regular expressions to match the PATH. If MockServer will successfully match regex expression with the URL client requested response will be returned.
+With this option regular expressions can be used to match the PATH. If MockServer successfully matches regex expression with the URL client requested response will be returned.
 
 ```json
 {
