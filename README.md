@@ -118,3 +118,7 @@ With this option regular expressions can be used to match the PATH. If MockServe
 }
 ```
 ![pathregex](https://user-images.githubusercontent.com/93197903/139103594-7972339a-7303-44e0-877a-0bb7af73f17c.png)
+
+With PathRegex it is also possible to use all found matches and substitute the response content with them. In order to use functionality be sure that response file contains properly defined replacement string. Please have a look [official documentation](https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex.replace?view=net-5.0)
+
+
