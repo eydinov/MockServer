@@ -216,3 +216,32 @@ With using PathRegex it is also possible to define filename with regex replaceme
 	}
 }
 ```
+
+### Assembly response type
+Assembly response type allows to define the response inside a separate assembly file (.net library) called mock plugin. Mock plugin it is a class implementing IMockPlugin interface.
+With body type = "assembly" the props "assembly" must be defined. Props "class" should be defined if there are more than one IMockPlugin implementations in one project. If class props is not defined the first one will be taken. Other props can be configured if plugn implementation required them. 
+
+```json
+{
+	"name": "Mock Server dashboard",
+	"request": {
+		"method": "GET",
+		"path": "/"
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"content-Type": "text/html; charset=UTF-8"
+		},
+		"body": {
+			"type": "assembly",
+			"props": {
+				"assembly": "\\plugins\\dashboard\\dashboard.dll",
+				"class": "Dashboard",
+				"page": "\\responses\\dashboard\\index.html"
+			}
+		},
+		"delay": 0
+	}
+}
+```
