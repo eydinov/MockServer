@@ -146,3 +146,27 @@ With PathRegex it is also possible to use all found matches and substitute the r
 
 ![pathregexbody](https://user-images.githubusercontent.com/93197903/139256036-d60df6df-b684-4bc0-b173-e330e81c7c51.png)
 
+## Response body options
+Currently three types of responses were implemented:
+- Inline response type
+- File response type
+- Assembly response type
+
+### Inline response
+Inline response type allows to put the response directly into mock.json file.
+
+```json
+"Response": {
+		"Status": 200,
+		"Headers": {
+			"Content-Type": "application/json"
+		},
+		"Body": {
+			"Type": "inline",
+			"Props": {
+				"Body": "{\"result\":{\"store\":\"$1\",\"order\":\"$2\"}}"
+			}
+		},
+		"Delay": 0
+	}
+```
