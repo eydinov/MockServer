@@ -30,23 +30,23 @@ All definitions for mocked services are stored into Configuration folder within 
 
 ```json
 {
-	"Name": "Test mock movie endpoint",
-	"Request": {
-		"Method": "GET",
-		"Path": "/api/v1/movie/moneyheist"
+	"name": "Test mock movie endpoint",
+	"request": {
+		"method": "GET",
+		"path": "/api/v1/movie/moneyheist"
 	},
-	"Response": {
-		"Status": 200,
-		"Headers": {
-			"Content-Type": "application/json"
+	"response": {
+		"status": 200,
+		"headers": {
+			"content-Type": "application/json"
 		},
-		"Body": {
-			"Type": "inline",
-			"Props": {
-				"Body": "{\"name\":\"La casa de papel\",\"year\":2017,\"seasons\":5,\"genre\":[\"Crime\",\"Drama\",\"Heist\",\"Thriller\"]}"
+		"body": {
+			"type": "inline",
+			"props": {
+				"body": "{\"name\":\"La casa de papel\",\"year\":2017,\"seasons\":5,\"genre\":[\"Crime\",\"Drama\",\"Heist\",\"Thriller\"]}"
 			}
 		},
-		"Delay": 0
+		"delay": 0
 	}
 }
 ```
@@ -69,23 +69,23 @@ With this option MockServer simply compares whether the METHOD and PATH configur
 
 ```json
 {
-	"Name": "Test mock movie endpoint",
-	"Request": {
-		"Method": "GET",
-		"Path": "/api/result"
+	"name": "Test mock movie endpoint",
+	"request": {
+		"method": "GET",
+		"path": "/api/result"
 	},
-	"Response": {
-		"Status": 200,
-		"Headers": {
-			"Content-Type": "application/json"
+	"response": {
+		"status": 200,
+		"headers": {
+			"content-Type": "application/json"
 		},
-		"Body": {
-			"Type": "inline",
-			"Props": {
-				"Body": "{\"result\":\"true\"}"
+		"body": {
+			"type": "inline",
+			"props": {
+				"body": "{\"result\":\"true\"}"
 			}
 		},
-		"Delay": 0
+		"delay": 0
 	}
 }
 ```
@@ -97,23 +97,23 @@ With this option regular expressions can be used to match the PATH. If MockServe
 
 ```json
 {
-	"Name": "Test mock endpoint with regex",
-	"Request": {
-		"Method": "GET",
-		"PathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
+	"name": "Test mock endpoint with regex",
+	"request": {
+		"method": "GET",
+		"pathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
 	},
-	"Response": {
-		"Status": 200,
-		"Headers": {
-			"Content-Type": "application/json"
+	"response": {
+		"status": 200,
+		"headers": {
+			"content-Type": "application/json"
 		},
-		"Body": {
-			"Type": "inline",
-			"Props": {
-				"Body": "{\"result\":true}"
+		"body": {
+			"type": "inline",
+			"props": {
+				"body": "{\"result\":true}"
 			}
 		},
-		"Delay": 0
+		"delay": 0
 	}
 }
 ```
@@ -123,23 +123,23 @@ With PathRegex it is also possible to use all found matches and substitute the r
 
 ```json
 {
-	"Name": "Test mock endpoint with regex",
-	"Request": {
-		"Method": "GET",
-		"PathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
+	"name": "Test mock endpoint with regex",
+	"request": {
+		"method": "GET",
+		"pathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
 	},
-	"Response": {
-		"Status": 200,
-		"Headers": {
-			"Content-Type": "application/json"
+	"response": {
+		"status": 200,
+		"headers": {
+			"content-Type": "application/json"
 		},
-		"Body": {
-			"Type": "inline",
-			"Props": {
-				"Body": "{\"result\":{\"store\":\"$1\",\"order\":\"$2\"}}"
+		"body": {
+			"type": "inline",
+			"props": {
+				"body": "{\"result\":{\"store\":\"$1\",\"order\":\"$2\"}}"
 			}
 		},
-		"Delay": 0
+		"delay": 0
 	}
 }
 ```
@@ -152,21 +152,67 @@ Currently three types of responses were implemented:
 - File response type
 - Assembly response type
 
-### Inline response
-Inline response type allows to put the response directly into mock.json file.
+### Inline response type
+Inline response type allows to define the response directly into mock.json file.
+With body type = "inline" the props "body" must be defined.
 
 ```json
-"Response": {
-		"Status": 200,
-		"Headers": {
-			"Content-Type": "application/json"
+"response": {
+        "status": 200,
+        "headers": {
+          "content-Type": "application/json"
+        },
+        "body": {
+          "type": "inline",
+          "props": {
+            "body": "{\"actor\":{\"firstName\":\"Ursula\",\"lastName\":\"Corbera\"}}"
+          }
+        },
+        "delay": 0
+      }
+```
+
+### File response type
+File response type allows to define the response inside a separate file on file system.
+With body type = "file" the props "fileName" must be defined.
+
+```json
+"response": {
+        "status": 200,
+        "headers": {
+          "content-Type": "application/json"
+        },
+        "body": {
+          "type": "file",
+          "props": {
+            "fileName": "\\responses\\orders\\035_2161190600113165.json"
+          }
+        },
+        "delay": 0
+      }
+```
+
+With using PathRegex it is also possible to define filename with regex replacement string like this:
+
+```json
+{
+	"name": "Test mock endpoint with regex",
+	"request": {
+		"method": "GET",
+		"pathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"content-Type": "application/json"
 		},
-		"Body": {
-			"Type": "inline",
-			"Props": {
-				"Body": "{\"result\":{\"store\":\"$1\",\"order\":\"$2\"}}"
+		"body": {
+			"type": "file",
+			"props": {
+				"fileName": "\\responses\\orders\\$1_$2.json"
 			}
 		},
-		"Delay": 0
+		"delay": 0
 	}
+}
 ```
