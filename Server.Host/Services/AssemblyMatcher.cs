@@ -32,34 +32,15 @@ namespace ServerHost.Services
             _plugin = ResolvePlugin(assemblyPath, option.Response.Body.Props.GetString(ASSEMBLY_CLASS_PROPS));
         }
 
-        /// <summary>
-        /// Set the response object
-        /// </summary>
-        /// <returns>Final response</returns>
-        protected override async Task<IMockResponse> SetResponse()
-        {
-            var mockResponse = new MockResponse
-            {
-                Status = Option.Response.Status,
-                Headers = Option.Response.Headers,
-                Body = await _plugin?.Execute()
-            };
-
-            return mockResponse;
-        }
-
-        /// <summary>
-        /// Validate the request.
-        /// Every time the request is matching with response the first step to perform is validate the request against the context.
-        /// Special logic can be implemented here (for example check response file exists, authorization is required, header contains etc...
-        /// </summary>
-        /// <param name="context">HttpContext</param>
-        /// <param name="option">Current MockOption object</param>
-        /// <returns></returns>
         public override async Task Validate(HttpContext context, MockOption option)
         {
             await base.Validate(context, option);
             await _plugin?.Validate(context, option);
+        }
+
+        protected override async Task<string> GetBody()
+        {
+            return ReplaceWithRegex(await _plugin?.Execute());
         }
 
         /// <summary>

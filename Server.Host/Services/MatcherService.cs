@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Web;
 using MockServer.Environment.Extensions;
 using MockServer.Environment.Abstractions;
+using ServerHost.Extensions;
 
 namespace ServerHost.Services
 {
@@ -54,7 +55,7 @@ namespace ServerHost.Services
         public async Task<IResponseMatcher> Match(HttpContext context)
         {
             var method = context.Request.Method;
-            var path = HttpUtility.UrlDecode(context.Request.GetPathAndQuery());
+            var path = HttpUtility.UrlDecode(context.GetRequestPathAndQuery());
 
             var res = dict.FirstOrDefault(x => x.Key.IsMatch(method, path));
 

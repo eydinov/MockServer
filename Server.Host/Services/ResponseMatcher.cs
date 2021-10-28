@@ -6,6 +6,9 @@ using System.Linq;
 using System;
 using MockServer.Environment.Extensions;
 using MockServer.Environment.Abstractions;
+using System.Text.RegularExpressions;
+using System.Web;
+using ServerHost.Extensions;
 
 namespace ServerHost.Services
 {
@@ -13,6 +16,8 @@ namespace ServerHost.Services
     {
         readonly IAuthorizationService _authService;
         public MockOption Option { get; private set; }
+
+        protected string PathAndQuery;
 
         public ResponseMatcher(MockOption option, IAuthorizationService authService)
         {
@@ -42,22 +47,29 @@ namespace ServerHost.Services
             {
                 Status = Option.Response.Status,
                 Headers = Option.Response.Headers,
-                Body = GetBody()
+                Body = await GetBody()
             };
 
             return await Task.FromResult(mockResponse);
         }
 
-        private string GetBody()
+        protected virtual Task<string> GetBody()
         {
-            var response = Option.Response.Body?.Props?.GetString("Body");
+            var response = ReplaceWithRegex(Option.Response.Body?.Props?.GetString("Body"));
 
             if (Option.Response.Headers.Where(h => h.Key == "Content-Type" && h.Value.StartsWith(@"text/")).Any())
             {
                 response = response.Replace(@"\n", Environment.NewLine);
             }
 
-            return response;
+            return Task.FromResult(response);
+        }
+
+        protected virtual string ReplaceWithRegex(string replacement)
+        {
+            return !string.IsNullOrWhiteSpace(Option.Request.PathRegex)
+                ? Regex.Replace(PathAndQuery, Option.Request.PathRegex, replacement)
+                : replacement;
         }
 
         /// <summary>
@@ -70,6 +82,7 @@ namespace ServerHost.Services
         /// <returns></returns>
         public virtual Task Validate(HttpContext context, MockOption option)
         {
+            PathAndQuery = HttpUtility.UrlDecode(context.GetRequestPathAndQuery());
             _authService.Authorize(context, option.Request?.Authorization);
 
             return Task.CompletedTask;

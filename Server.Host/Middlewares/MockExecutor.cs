@@ -54,7 +54,7 @@ namespace ServerHost.Middlewares
                 return response;
             }
 
-            throw new NotMatchedException($"No matches found for request {context.Request.Method}: '{context.Request.GetPathAndQuery()}'");
+            throw new NotMatchedException($"No matches found for request {context.Request.Method}: '{context.GetRequestPathAndQuery()}'");
         }
 
         private async Task WriteFinalResponse(HttpContext context, IMockResponse response)
@@ -74,7 +74,7 @@ namespace ServerHost.Middlewares
         {
             var request = JsonConvert.SerializeObject(new
             {
-                Path = context.Request.GetPathAndQuery(),
+                Path = context.GetRequestPathAndQuery(),
                 Headers = context.Request.Headers,
                 Body = await context.GetRequestBody()
             });

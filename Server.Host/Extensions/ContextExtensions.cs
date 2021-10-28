@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using MockServer.Environment.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +27,11 @@ namespace ServerHost.Extensions
         public static void SetResponseContentType(this HttpContext context, string contentType)
         {
             context.Response.ContentType = contentType;
+        }
+
+        public static string GetRequestPathAndQuery(this HttpContext context)
+        {
+            return context.Request.GetPathAndQuery();
         }
 
         public static async Task WriteBody(this HttpContext context, string body)

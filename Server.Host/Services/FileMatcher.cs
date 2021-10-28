@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using MockServer.Environment.Extensions;
 using MockServer.Environment.Abstractions;
+using ServerHost.Extensions;
 
 namespace ServerHost.Services
 {
@@ -17,7 +18,7 @@ namespace ServerHost.Services
         const string FILE_NAME_PROPS = "FileName";
 
         string _responseFile;
-        string _regexResponse;
+        readonly string _regexResponse;
         readonly ILogger<FileMatcher> _logger;
 
         public FileMatcher(ILogger<FileMatcher> logger, MockOption option, IAuthorizationService authService) : base(option, authService)
@@ -27,38 +28,27 @@ namespace ServerHost.Services
             _regexResponse = _responseFile;
         }
 
-        /// <summary>
-        /// Set the response object
-        /// </summary>
-        /// <returns>Final response</returns>
-        protected override async Task<IMockResponse> SetResponse()
+        protected override async Task<string> GetBody()
         {
-            var mockResponse = new MockResponse
+            try
             {
-                Status = Option.Response.Status,
-                Headers = Option.Response.Headers,
-                Body = await GetBodyFromFile(_responseFile)
-            };
+                using var reader = File.OpenText(_responseFile);
+                var bodyFromFile = await reader.ReadToEndAsync();
 
-            return mockResponse;
+                return ReplaceWithRegex(bodyFromFile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
         }
 
-        /// <summary>
-        /// Validate the request.
-        /// Every time the request is matching with response the first step to perform is validate the request against the context.
-        /// Special logic can be implemented here (for example check response file exists, authorization is required, header contains etc...
-        /// </summary>
-        /// <param name="context">HttpContext</param>
-        /// <param name="option">Current MockOption object</param>
-        /// <returns></returns>
         public override Task Validate(HttpContext context, MockOption option)
         {
             base.Validate(context, option);
 
-            if (!string.IsNullOrWhiteSpace(option.Request.PathRegex))
-            {
-                _responseFile = Regex.Replace(HttpUtility.UrlDecode(context.Request.GetPathAndQuery()), option.Request.PathRegex, _regexResponse);
-            }
+            _responseFile = ReplaceWithRegex(_regexResponse);
 
             if (!File.Exists(_responseFile))
             {
@@ -67,28 +57,5 @@ namespace ServerHost.Services
 
             return Task.CompletedTask;
         }
-
-        /// <summary>
-        /// Returns body stored in file
-        /// </summary>
-        /// <param name="fileName">full UNC path to the file with response body</param>
-        /// <returns></returns>
-        private async Task<string> GetBodyFromFile(string fileName)
-        {
-            try
-            {
-                using var reader = File.OpenText(fileName);
-                var bodyFromFile = await reader.ReadToEndAsync();
-
-                return bodyFromFile;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return null;
-            }
-
-        }
-
     }
 }
