@@ -386,26 +386,27 @@ And eventually if token is correct and consists all expected Claims API will ret
 
 ![bearer_success](https://user-images.githubusercontent.com/93197903/139437979-99fcc95c-cad2-4b5c-b3df-381ad5e92997.png)
 
-### OAuth token provider
-To communicate with API secured by Bearer authentication schema application should first request an access to the API by requesting the token from token provider. MockServer does not stick to any specific provider - you are free to use any provider you want or have access to.
+### Header authentication
+MockServer can also authenticate requests based on a match expression against any header. The match expression works simply - just compares if headers matches with the claims configured in the mock.json or not.
 
-But sometimes communication with token provider is a part of integration process and it could be happened that token provided is not accessible from the environment where you develop or test API. For such scenarios MockServer provides its own already mocked OAuth2 token provider emulator.
-
-It has been already configured inside the mock.json file. The token endpoint can be used to programmatically request tokens.
+Most common use case of using header authorization is an API key. An API key is a token that a client provides when making API calls. One of the way how it could be done is providing x-api-key header when requesting the API.
 
 ```json
- {
-      "name": "Mock OAuth2 token endpoint",
+{
+      "name": "Weather endpoint secured by x-api-key header",
       "request": {
-        "method": "POST",
-        "path": "/oauth2/token",
-        "props": {
-          "grant_type": "password",
-          "username": "testadmin",
-          "password": "Qwerty123",
-          "client_id": "030f0c52-792a-4086-ab25-9565dcebd350",
-          "client_secret": "0_T-Gq-HY8vcfFTjIZkWrddimfUIACgm7PEkEPoI"
-        }
+        "method": "GET",
+        "pathRegex": "/api/weather/city/([a-zA-Z]+)$",
+        "authorization": [
+          {
+            "schema": "Header",
+            "unauthorizedStatus": 401,
+            "unauthorizedMessage": "{\"fault\":{\"faultstring\":\"Failed to resolve API Key variable request.header.x-api-key\",\"detail\":{\"errorcode\":\"steps.oauth.v2.FailedToResolveAPIKey\"}}}",
+            "claims": {
+              "x-api-key": "HFL6juGtPN8r2ZgTaimwtzU4z8tqdQic"
+            }
+          }
+        ]
       },
       "response": {
         "status": 200,
@@ -413,28 +414,78 @@ It has been already configured inside the mock.json file. The token endpoint can
           "content-Type": "application/json"
         },
         "body": {
-          "type": "assembly",
+          "type": "inline",
           "props": {
-            "assembly": "\\plugins\\oauth\\OAuth.dll",
-            "class": "OAuth",
-            "body": "{\"access_token\": \"{access_token}\", \"token_type\": \"bearer\", \"expires_in\": {expires_in}, \"refresh_token\": \"{refresh_token}\", \"refresh_token_expires_in\": {refresh_expires_in}}",
-            "claims": "{\"appid\":\"{appid}\", \"apptype\":\"{apptype}\", \"authmethod\":\"{authmethod}\", \"unique_name\":\"{unique_name}\", \"upn\":\"{upn}\"}"
+            "body": "{\"forecasts\":[{\"day\":\"Sun\",\"date\":1547366400,\"low\":48,\"high\":58,\"text\":\"Rain\",\"code\":12},{\"day\":\"Mon\",\"date\":1547452800,\"low\":47,\"high\":58,\"text\":\"Rain\",\"code\":12},{\"day\":\"Tue\",\"date\":1547539200,\"low\":46,\"high\":59,\"text\":\"Scattered Showers\",\"code\":39},{\"day\":\"Wed\",\"date\":1547625600,\"low\":49,\"high\":56,\"text\":\"Rain\",\"code\":12},{\"day\":\"Thu\",\"date\":1547712000,\"low\":49,\"high\":59,\"text\":\"Scattered Showers\",\"code\":39},{\"day\":\"Fri\",\"date\":1547798400,\"low\":48,\"high\":61,\"text\":\"Showers\",\"code\":11},{\"day\":\"Sat\",\"date\":1547884800,\"low\":47,\"high\":62,\"text\":\"Rain\",\"code\":12}]}"
           }
         },
-        "delay": 0,
-        "props": {
-          "aud": "https://oauth2server",
-          "iss": "https://oauth2server",
-          "exp": "3600",
-          "appid": "030f0c52-792a-4086-ab25-9565dcebd350",
-          "apptype": "Confidential",
-          "authmethod": "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport",
-          "unique_name": "testadmin",
-          "upn": "testadmin@mycompany.com"
-        }
+        "delay": 0
       }
     }
 ```
+
+When provide not valid x-api-ke or not provide it at all:
+
+![apikey_failed](https://user-images.githubusercontent.com/93197903/139454471-dfea0c46-c53f-4d88-be5e-9562f711b361.png)
+
+When provide valid x-api-key:
+
+![apikey_success](https://user-images.githubusercontent.com/93197903/139454533-0eadf809-0766-408d-afc8-89bf48a7f00b.png)
+
+## OAuth token provider
+To communicate with API secured by Bearer authentication schema application should first request an access to the API by requesting the token from token provider. MockServer does not stick to any specific provider - you are free to use any provider you want or have access to.
+
+But sometimes communication with token provider is a part of integration process and it could be happened that token provided is not accessible from the environment where you develop or test API. For such scenarios MockServer provides its own already mocked OAuth2 token provider emulator.
+
+It has been already configured inside the mock.json file. The token endpoint can be used to programmatically request tokens.
+
+```json
+{
+  "name": "Mock OAuth2 token endpoint",
+  "request": {
+    "method": "POST",
+    "path": "/oauth2/token",
+    "props": {
+      "grant_type": "password",
+      "username": "testadmin",
+      "password": "Qwerty123",
+      "client_id": "030f0c52-792a-4086-ab25-9565dcebd350",
+      "client_secret": "0_T-Gq-HY8vcfFTjIZkWrddimfUIACgm7PEkEPoI"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "content-Type": "application/json"
+    },
+    "body": {
+      "type": "assembly",
+      "props": {
+        "assembly": "\\plugins\\oauth\\OAuth.dll",
+        "class": "OAuth",
+        "body": "{\"access_token\": \"{access_token}\", \"token_type\": \"bearer\", \"expires_in\": {expires_in}, \"refresh_token\": \"{refresh_token}\", \"refresh_token_expires_in\": {refresh_expires_in}}",
+        "claims": "{\"appid\":\"{appid}\", \"apptype\":\"{apptype}\", \"authmethod\":\"{authmethod}\", \"unique_name\":\"{unique_name}\", \"upn\":\"{upn}\"}"
+      }
+    },
+    "delay": 0,
+    "props": {
+      "aud": "https://oauth2server",
+      "iss": "https://oauth2server",
+      "exp": "3600",
+      "appid": "030f0c52-792a-4086-ab25-9565dcebd350",
+      "apptype": "Confidential",
+      "authmethod": "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport",
+      "unique_name": "testadmin",
+      "upn": "testadmin@mycompany.com"
+    }
+  }
+}
+```
+
+Wrong x-api-key is provided:
+
+Correct x-api-key is provided:
+
 
 In the **request.props** object you define the list of properties which will be checked by provider during the autorization like grant_type, username, password, client_id, client_secred and others.
 In the **response.claims** you define the list of claims to be included into the token. claims collection uses **response.props** object to substitute values.
