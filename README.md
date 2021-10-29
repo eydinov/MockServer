@@ -276,7 +276,7 @@ MockServer allows you to setting up response in a way that it can have a fixed d
 ```
 ![delay](https://user-images.githubusercontent.com/93197903/139413978-35effba0-b251-494a-ba47-0d8c6c6db0d2.png)
 
-### Authorization and authentication
+## Authorization and authentication
 In real life almost all API your application would be communicating with will be secured by authorization and authentication mechanisms.
 At the moment three types of authentication are supported:
 - HTTP Basic authentication
@@ -284,7 +284,7 @@ At the moment three types of authentication are supported:
 - Header authentication
 
 
-## HTTP Basic authentication
+### HTTP Basic authentication
 HTTP Basic is a widely supported part of the HTTP standard supporting username/password authentication. An HTTP resource secured with HTTP Basic will result in a browser prompting the user with a username/password dialogue box on their initial visit.
 
 In order to setup Mock API to use Basic authentication schema authorization object should be properly configured inside the mock.json file for each particular API.
