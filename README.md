@@ -387,6 +387,51 @@ And eventually if token is correct and consists all expected Claims API will ret
 ![bearer_success](https://user-images.githubusercontent.com/93197903/139437979-99fcc95c-cad2-4b5c-b3df-381ad5e92997.png)
 
 ### OAuth token provider
-To communicate with API secured by Bearer authentication schema application should first request an access to the API by requesting the token from token provider. MockServer does not stick to use specific provider - you are free to use any provider you want or have access too.
+To communicate with API secured by Bearer authentication schema application should first request an access to the API by requesting the token from token provider. MockServer does not stick to any specific provider - you are free to use any provider you want or have access to.
 
-But sometimes communication with token provider is a part of integration process and it could be happened that token provided is not accessible from the environment where you develop or test API. For such scenarios Mock Server provides its own already mocked OAuth2 token provider.
+But sometimes communication with token provider is a part of integration process and it could be happened that token provided is not accessible from the environment where you develop or test API. For such scenarios MockServer provides its own already mocked OAuth2 token provider emulator.
+
+It has been already configured inside the mock.json file:
+
+```json
+ {
+      "Name": "Mock OAuth2 provider",
+      "Request": {
+        "Method": "POST",
+        "Path": "/oauth2/token",
+        "Props": {
+          "grant_type": "password",
+          "username": "testadmin",
+          "password": "Qwerty123",
+          "client_id": "030f0c52-792a-4086-ab25-9565dcebd350",
+          "client_secret": "0_T-Gq-HY8vcfFTjIZkWrddimfUIACgm7PEkEPoI"
+        }
+      },
+      "Response": {
+        "Status": 200,
+        "Headers": {
+          "Content-Type": "application/json"
+        },
+        "Body": {
+          "Type": "assembly",
+          "Props": {
+            "Assembly": "\\plugins\\oauth\\OAuth.dll",
+            "Class": "OAuth",
+            "Body": "{\"access_token\": \"{access_token}\", \"token_type\": \"bearer\", \"expires_in\": {expires_in}, \"refresh_token\": \"{refresh_token}\", \"refresh_token_expires_in\": {refresh_expires_in}}",
+            "Claims": "{\"appid\":\"{appid}\", \"apptype\":\"{apptype}\", \"authmethod\":\"{authmethod}\", \"unique_name\":\"{unique_name}\", \"upn\":\"{upn}\"}"
+          }
+        },
+        "Delay": 0,
+        "Props": {
+          "aud": "https://oauth2server",
+          "iss": "https://oauth2server",
+          "exp": "3600",
+          "appid": "030f0c52-792a-4086-ab25-9565dcebd350",
+          "apptype": "Confidential",
+          "authmethod": "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport",
+          "unique_name": "testadmin",
+          "upn": "testadmin@mycompany.com"
+        }
+      }
+    }
+```
