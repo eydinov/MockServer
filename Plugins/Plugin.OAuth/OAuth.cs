@@ -42,7 +42,7 @@ namespace OAuth
             return Task.FromResult(_response);
         }
 
-        public Task Validate(HttpContext context, MockOption option)
+        public Task Init(HttpContext context, MockOption option)
         {
             CheckRequest(context, option);
 

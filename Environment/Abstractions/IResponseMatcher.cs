@@ -7,6 +7,6 @@ namespace MockServer.Environment.Abstractions
     {
         MockOption Option { get; }
         Task<IMockResponse> Resolve();
-        Task Validate(HttpContext context, MockOption mockConfig);
+        Task Init(HttpContext context, MockOption mockConfig);
     }
 }

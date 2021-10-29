@@ -58,7 +58,7 @@ namespace ServerHost.Services
             }
         }
 
-        private bool ValidateClaims(IEnumerable<Claim> claims, Dictionary<string, string> claimsToCheck)
+        private bool ValidateClaims(IEnumerable<Claim> claims, IDictionary<string, string> claimsToCheck)
         {
             foreach (var claim in claimsToCheck)
             {

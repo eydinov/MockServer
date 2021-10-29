@@ -60,7 +60,7 @@ namespace ServerHost.Extensions
             return str;
         }
 
-        public static bool ValidateHeaders(this HttpContext context, Dictionary<string, string> claims)
+        public static bool ValidateHeaders(this HttpContext context, IDictionary<string, string> claims)
         {
             foreach (var claim in claims)
             {

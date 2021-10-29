@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Text;
 using MockServer.Environment.Abstractions;
+using MockServer.Environment.Extensions;
 
 namespace ServerHost.Services
 {
@@ -33,13 +34,11 @@ namespace ServerHost.Services
 
                 if (authHeader != null && authHeader.StartsWith("Basic "))
                 {
-                    _logger.LogInformation($"Basic authorization header '{authHeader}' has been provided");
-
                     var encodedUsernamePassword = authHeader.Split(' ')[1]?.Trim();
                     var decodedUsernamePassword = Encoding.UTF8.GetString(Convert.FromBase64String(encodedUsernamePassword)).Split(':');
                     var username = decodedUsernamePassword[0];
                     var password = decodedUsernamePassword[1];
-                    var res = username.Equals(authData.Claims["UserName"], StringComparison.InvariantCultureIgnoreCase) && password.Equals(authData.Claims["Password"]);
+                    var res = username.Equals(authData.Claims.GetString("username"), StringComparison.InvariantCultureIgnoreCase) && password.Equals(authData.Claims.GetString("password"));
 
                     if (!res)
                         throw new Exception("Wrong UserName or Password");
@@ -49,7 +48,7 @@ namespace ServerHost.Services
                 else
                 {
                     context.Response.Headers["WWW-Authenticate"] = "Basic";
-                    context.Response.Headers["WWW-Authenticate"] += $" realm=\"{authData.Claims["Realm"]}\"";
+                    context.Response.Headers["WWW-Authenticate"] += $" realm=\"{authData.Claims.GetString("realm")}\"";
 
                     throw new Exception("No Basic authorization header has been provided. Access denied");
                 }

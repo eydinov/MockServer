@@ -16,8 +16,8 @@ namespace ServerHost.Services
 {
     public class AssemblyMatcher : ResponseMatcher
     {
-        const string ASSEMBLY_NAME_PROPS = "Assembly";
-        const string ASSEMBLY_CLASS_PROPS = "Class";
+        const string ASSEMBLY_NAME_PROPS = "assembly";
+        const string ASSEMBLY_CLASS_PROPS = "class";
 
         readonly IMockPlugin _plugin;
         readonly IServiceProvider _provider;
@@ -32,15 +32,15 @@ namespace ServerHost.Services
             _plugin = ResolvePlugin(assemblyPath, option.Response.Body.Props.GetString(ASSEMBLY_CLASS_PROPS));
         }
 
-        public override async Task Validate(HttpContext context, MockOption option)
+        public override async Task Init(HttpContext context, MockOption option)
         {
-            await base.Validate(context, option);
-            await _plugin?.Validate(context, option);
+            await base.Init(context, option);
+            await _plugin?.Init(context, option);
         }
 
         protected override async Task<string> GetBody()
         {
-            return ReplaceWithRegex(await _plugin?.Execute());
+            return await _plugin?.Execute();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace ServerHost.Services
 
                 if (pluginAssembly == null || !pluginAssembly.GetTypes().Any(x => x.GetInterfaces().Contains(typeof(IMockPlugin))))
                 {
-                    throw new FileNotFoundException($"File '{pluginPath}' not found");
+                    throw new FileNotFoundException($"Assembly '{pluginPath}' does not found");
                 }
 
                 var cls = !string.IsNullOrWhiteSpace(@class)

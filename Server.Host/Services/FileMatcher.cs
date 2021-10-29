@@ -32,28 +32,25 @@ namespace ServerHost.Services
         {
             try
             {
+                if (!File.Exists(_responseFile))
+                    throw new FileNotFoundException($"File '{_responseFile}' does not exist");
+
                 using var reader = File.OpenText(_responseFile);
                 var bodyFromFile = await reader.ReadToEndAsync();
 
-                return ReplaceWithRegex(bodyFromFile);
+                return bodyFromFile;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return null;
+                throw new NotFoundException();
             }
         }
 
-        public override Task Validate(HttpContext context, MockOption option)
+        public override Task Init(HttpContext context, MockOption option)
         {
-            base.Validate(context, option);
-
+            base.Init(context, option);
             _responseFile = ReplaceWithRegex(_regexResponse);
-
-            if (!File.Exists(_responseFile))
-            {
-                throw new NotFoundException();
-            }
 
             return Task.CompletedTask;
         }

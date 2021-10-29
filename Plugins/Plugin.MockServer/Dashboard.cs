@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using MockServer.Environment.Abstractions;
+using MockServer.Environment.Extensions;
 
 namespace Plugin.MockServer
 {
@@ -56,12 +57,13 @@ namespace Plugin.MockServer
 
                     sb_main.AppendLine(string.Format(rowBlock,
                         option.Request.Method.ToLower(),
-                        option.Request.Method, HttpUtility.HtmlEncode(option.Request.Path ?? option.Request.PathRegex),
+                        option.Request.Method,
+                        HttpUtility.HtmlEncode(option.Request.Path ?? option.Request.PathRegex),
                         HttpUtility.HtmlEncode(option.Name),
                         (authSchemas == null || !authSchemas.Any()) ? "-" : string.Join("<br>", authSchemas),
-                        $"{option.Response.Status}",
-                        sb.ToString(),
-                        HttpUtility.HtmlEncode(GetBody(option.Response.Body))));
+                        option.Response.Status,
+                        sb,
+                        GetBody(option.Response.Body)));
                 }
 
                 page = page.Replace("_options_", sb_main.ToString());
@@ -81,15 +83,13 @@ namespace Plugin.MockServer
         /// <returns></returns>
         private string GetBody(Body body)
         {
-            switch (body?.Type?.ToLower())
+            string resp = (body?.Type?.ToLower()) switch
             {
-                case "assembly":
-                    return $"Response is handled by the plugin '{body.Props["Assembly"]}'";
-                case "file":
-                    return $"Response body is retrieved from the file '{body.Props["FileName"]}'";
-                default:
-                    return body?.Props["Body"] ?? "-";
-            }
+                "assembly" => $"Response is handled by the plugin '{body.Props.GetString("assembly")}'",
+                "file" => $"Response body is retrieved from the file '{body.Props.GetString("filename")}'",
+                _ => body?.Props.GetString("body") ?? "-",
+            };
+            return HttpUtility.HtmlEncode(resp);
         }
 
         /// <summary>
@@ -98,22 +98,13 @@ namespace Plugin.MockServer
         /// <param name="context">HttpContext</param>
         /// <param name="option">Mock option</param>
         /// <returns></returns>
-        public Task Validate(HttpContext context, MockOption option)
+        public Task Init(HttpContext context, MockOption option)
         {
-            _fileName = option.Response.Body.Props["Page"];
-
-            if (_fileName.StartsWith("\\"))
-            {
-                var pathes = _fileName.Split('\\', StringSplitOptions.RemoveEmptyEntries).ToList();
-                pathes.Insert(0, AppDomain.CurrentDomain.BaseDirectory);
-                _fileName = Path.Combine(pathes.ToArray());
-            }
-
+            _fileName = FileExtensions
+                .GetFullPath(option.Response.Body.Props.GetString("page"));
 
             if (!File.Exists(_fileName))
-            {
                 throw new NotFoundException();
-            }
 
             return Task.CompletedTask;
         }

@@ -47,7 +47,7 @@ namespace ServerHost.Services
             {
                 Status = Option.Response.Status,
                 Headers = Option.Response.Headers,
-                Body = await GetBody()
+                Body = ReplaceWithRegex(await GetBody())
             };
 
             return await Task.FromResult(mockResponse);
@@ -55,7 +55,7 @@ namespace ServerHost.Services
 
         protected virtual Task<string> GetBody()
         {
-            var response = ReplaceWithRegex(Option.Response.Body?.Props?.GetString("Body"));
+            var response = Option.Response.Body?.Props?.GetString("Body");
 
             if (Option.Response.Headers.Where(h => h.Key == "Content-Type" && h.Value.StartsWith(@"text/")).Any())
             {
@@ -80,11 +80,17 @@ namespace ServerHost.Services
         /// <param name="context">HttpContext</param>
         /// <param name="option">Current MockOption object</param>
         /// <returns></returns>
-        public virtual Task Validate(HttpContext context, MockOption option)
+        public virtual Task Init(HttpContext context, MockOption option)
         {
-            PathAndQuery = HttpUtility.UrlDecode(context.GetRequestPathAndQuery());
-            _authService.Authorize(context, option.Request?.Authorization);
+            AuthorizeRequest(context, option.Request.Authorization);
 
+            PathAndQuery = HttpUtility.UrlDecode(context.GetRequestPathAndQuery());
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task AuthorizeRequest(HttpContext context, Authorization[] authorizations)
+        {
+            _authService.Authorize(context, authorizations);
             return Task.CompletedTask;
         }
     }

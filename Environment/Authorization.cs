@@ -7,7 +7,7 @@ namespace MockServer.Environment
         public string Schema { get; set; }
         public int UnauthorizedStatus { get; set; }
         public string UnauthorizedMessage { get; set; }
-        public Dictionary<string, string> Claims { get; set; }
+        public IDictionary<string, string> Claims { get; set; }
 
     }
 }

@@ -26,7 +26,6 @@ namespace ServerHost.Services
         /// <returns></returns>
         public void Handle(HttpContext context, Authorization authData)
         {
-            _logger.LogInformation("Checking claims...");
             if (!context.ValidateHeaders(authData.Claims))
                 throw new UnauthorizedException(authData.UnauthorizedStatus == 0 ? StatusCodes.Status401Unauthorized : authData.UnauthorizedStatus, authData.UnauthorizedMessage);
         }

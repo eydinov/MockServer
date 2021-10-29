@@ -61,7 +61,7 @@ namespace ServerHost.Services
 
             if (res.Value is IResponseMatcher matcher)
             {
-                await matcher?.Validate(context, matcher.Option);
+                await matcher?.Init(context, matcher.Option);
                 return matcher;
             }
             return null;
