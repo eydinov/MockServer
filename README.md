@@ -254,7 +254,7 @@ MockServer allows you to setting up response in a way that it can have a fixed d
 
 ```json
 {
-      "Name": "Test mock endpoint with regex",
+      "Name": "Test mock endpoint with 5000ms delay",
       "Request": {
         "Method": "GET",
         "PathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
