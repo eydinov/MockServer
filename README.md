@@ -147,13 +147,13 @@ With PathRegex it is also possible to use all found matches and substitute the r
 ![pathregexbody](https://user-images.githubusercontent.com/93197903/139256036-d60df6df-b684-4bc0-b173-e330e81c7c51.png)
 
 ## Response body options
-Currently three types of responses were implemented:
+At the moment, three types of responses have been implemented:
 - Inline response type
 - File response type
 - Assembly response type
 
 ### Inline response type
-Inline response type allows to define the response directly into mock.json file.
+Inline response type allows to define the response directly in mock.json file.
 With body type = "inline" the props "body" must be defined.
 
 ```json
@@ -192,7 +192,7 @@ With body type = "file" the props "fileName" must be defined.
       }
 ```
 
-With using PathRegex it is also possible to define filename with regex replacement string like in example below. This option allows to define different set of responses without the need to modify mock.json file
+With using PathRegex you can also define a filename with a regular expression replacement string inside it as shown in the example below. This option allows to define different set of responses without having to modify the mock.json file
 
 ```json
 {
@@ -218,7 +218,7 @@ With using PathRegex it is also possible to define filename with regex replaceme
 ```
 
 ### Assembly response type
-Assembly response type allows to define the response inside a separate assembly file (.net library) called mock plugin. Mock plugin it is a class implementing IMockPlugin interface.
+Assembly response type allows to implement the way and form of the response inside a separate assembly file (.net library) called mock plugin. Mock plugin it is a class implementing IMockPlugin interface.
 
 With body type = "assembly" the props "assembly" must be defined. Props "class" should be defined if there are more than one IMockPlugin implementations in one project. If class props is not defined the first one will be taken. Other props can be configured if plugn implementation requires them. You can pass as many props as your implementation requires.
 
@@ -246,3 +246,32 @@ With body type = "assembly" the props "assembly" must be defined. Props "class" 
 	}
 }
 ```
+
+### Delay
+Mock servers often return responses faster than their real API counterparts. This is great when you just want your functional test suite to run as fast as possible, but if you’re testing your app’s UX with realistic timings, or want to check that a timeout is configured correctly then you need to be able to add artificial delay to your responses.
+
+MockServer allows you to setting up response in a way that it can have a fixed delay attached to it, such that the response will not be returned until after the specified number of milliseconds:
+
+```json
+{
+      "Name": "Test mock endpoint with regex",
+      "Request": {
+        "Method": "GET",
+        "PathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
+      },
+      "Response": {
+        "Status": 200,
+        "Headers": {
+          "Content-Type": "application/json"
+        },
+        "Body": {
+          "type": "file",
+          "props": {
+            "fileName": "\\responses\\orders\\035_2161190600113165.json"
+          }
+        },
+        "Delay": 5000
+      }
+    }
+```
+![delay](https://user-images.githubusercontent.com/93197903/139413978-35effba0-b251-494a-ba47-0d8c6c6db0d2.png)
