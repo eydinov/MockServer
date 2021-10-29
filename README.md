@@ -391,15 +391,15 @@ To communicate with API secured by Bearer authentication schema application shou
 
 But sometimes communication with token provider is a part of integration process and it could be happened that token provided is not accessible from the environment where you develop or test API. For such scenarios MockServer provides its own already mocked OAuth2 token provider emulator.
 
-It has been already configured inside the mock.json file:
+It has been already configured inside the mock.json file. The token endpoint can be used to programmatically request tokens.
 
 ```json
  {
-      "Name": "Mock OAuth2 provider",
-      "Request": {
-        "Method": "POST",
-        "Path": "/oauth2/token",
-        "Props": {
+      "name": "Mock OAuth2 token endpoint",
+      "request": {
+        "method": "POST",
+        "path": "/oauth2/token",
+        "props": {
           "grant_type": "password",
           "username": "testadmin",
           "password": "Qwerty123",
@@ -407,22 +407,22 @@ It has been already configured inside the mock.json file:
           "client_secret": "0_T-Gq-HY8vcfFTjIZkWrddimfUIACgm7PEkEPoI"
         }
       },
-      "Response": {
-        "Status": 200,
-        "Headers": {
-          "Content-Type": "application/json"
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-Type": "application/json"
         },
-        "Body": {
-          "Type": "assembly",
-          "Props": {
-            "Assembly": "\\plugins\\oauth\\OAuth.dll",
-            "Class": "OAuth",
-            "Body": "{\"access_token\": \"{access_token}\", \"token_type\": \"bearer\", \"expires_in\": {expires_in}, \"refresh_token\": \"{refresh_token}\", \"refresh_token_expires_in\": {refresh_expires_in}}",
-            "Claims": "{\"appid\":\"{appid}\", \"apptype\":\"{apptype}\", \"authmethod\":\"{authmethod}\", \"unique_name\":\"{unique_name}\", \"upn\":\"{upn}\"}"
+        "body": {
+          "type": "assembly",
+          "props": {
+            "assembly": "\\plugins\\oauth\\OAuth.dll",
+            "class": "OAuth",
+            "body": "{\"access_token\": \"{access_token}\", \"token_type\": \"bearer\", \"expires_in\": {expires_in}, \"refresh_token\": \"{refresh_token}\", \"refresh_token_expires_in\": {refresh_expires_in}}",
+            "claims": "{\"appid\":\"{appid}\", \"apptype\":\"{apptype}\", \"authmethod\":\"{authmethod}\", \"unique_name\":\"{unique_name}\", \"upn\":\"{upn}\"}"
           }
         },
-        "Delay": 0,
-        "Props": {
+        "delay": 0,
+        "props": {
           "aud": "https://oauth2server",
           "iss": "https://oauth2server",
           "exp": "3600",
@@ -435,3 +435,8 @@ It has been already configured inside the mock.json file:
       }
     }
 ```
+
+In the **request.props** object you define the list of properties which will be checked by provider during the autorization like grant_type, username, password, client_id, client_secred and others.
+In the **response.claims** you define the list of claims to be included into the token. claims collection uses **response.props** object to substitute values.
+
+![oauth2](https://user-images.githubusercontent.com/93197903/139446637-d1ee9b18-eb77-4180-8b6d-129c95151ad6.png)
