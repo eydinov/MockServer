@@ -275,3 +275,62 @@ MockServer allows you to setting up response in a way that it can have a fixed d
     }
 ```
 ![delay](https://user-images.githubusercontent.com/93197903/139413978-35effba0-b251-494a-ba47-0d8c6c6db0d2.png)
+
+### Authorization and authentication
+In real life almost all API your application would be communicating with will be secured by authorization and authentication mechanisms.
+At the moment three types of authentication are supported:
+- HTTP Basic authentication
+- Bearer token authentication
+- Header authentication
+
+
+## HTTP Basic authentication
+HTTP Basic is a widely supported part of the HTTP standard supporting username/password authentication. An HTTP resource secured with HTTP Basic will result in a browser prompting the user with a username/password dialogue box on their initial visit.
+
+In order to setup Mock API to use Basic authentication schema authorization object should be properly configured inside the mock.json file for each particular API.
+
+```json
+{
+      "name": "Endpoint secured with HTTP Basic authentication",
+      "request": {
+        "method": "GET",
+        "path": "/HttpService/Contractor",
+        "authorization": [
+          {
+            "schema": "Basic",
+            "unauthorizedStatus": 401,
+            "unauthorizedMessage": "Not authorized",
+            "claims": {
+              "userName": "testadmin",
+              "password": "Qwerty123",
+              "realm": "test:realm:server"
+            }
+          }
+        ]
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-Type": "text/text; charset=UTF-8"
+        },
+        "body": {
+          "type": "inline",
+          "props": {
+            "body": "customerID = 6231239765420; customerName = Ursula Corbero; customerBIN = 9999999999; customerCountry = Spain; customerGovernment = False"
+          }
+        },
+        "delay": 0
+      }
+}
+```
+Once you reach out the page the BASIC authentication mechanism will request you to enter login and password
+
+![basic](https://user-images.githubusercontent.com/93197903/139422685-1b2c6925-d5fa-4a6c-8e40-01ec159dbd22.png)
+
+If enter wrong credential API will return the HTTP Status code 401 and the message "Not authorized" as configured in the API configuration file.
+
+![basic_fail](https://user-images.githubusercontent.com/93197903/139422834-838f4231-a13c-46c6-8bbd-8b16315a108b.png)
+
+If enter correct credentials you call will be successfully authorized therefore you will be received with the correct response and HTTP status code 200
+
+![basic_success](https://user-images.githubusercontent.com/93197903/139422989-7572f4cc-27fe-40b1-82c8-d2f69ecebe53.png)
