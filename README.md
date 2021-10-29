@@ -30,23 +30,23 @@ All definitions for mocked services are stored into Configuration folder within 
 
 ```json
 {
-	"Name": "Test mock movie endpoint",
-	"Request": {
-		"Method": "GET",
-		"Path": "/api/v1/movie/moneyheist"
+	"name": "Test mock movie endpoint",
+	"request": {
+		"method": "GET",
+		"path": "/api/v1/movie/moneyheist"
 	},
-	"Response": {
-		"Status": 200,
-		"Headers": {
-			"Content-Type": "application/json"
+	"response": {
+		"status": 200,
+		"headers": {
+			"content-Type": "application/json"
 		},
-		"Body": {
-			"Type": "inline",
-			"Props": {
-				"Body": "{\"name\":\"La casa de papel\",\"year\":2017,\"seasons\":5,\"genre\":[\"Crime\",\"Drama\",\"Heist\",\"Thriller\"]}"
+		"body": {
+			"type": "inline",
+			"props": {
+				"body": "{\"name\":\"La casa de papel\",\"year\":2017,\"seasons\":5,\"genre\":[\"Crime\",\"Drama\",\"Heist\",\"Thriller\"]}"
 			}
 		},
-		"Delay": 0
+		"delay": 0
 	}
 }
 ```
@@ -69,23 +69,23 @@ With this option MockServer simply compares whether the METHOD and PATH configur
 
 ```json
 {
-	"Name": "Test mock movie endpoint",
-	"Request": {
-		"Method": "GET",
-		"Path": "/api/result"
+	"name": "Mock movie endpoint",
+	"request": {
+		"method": "GET",
+		"path": "/api/result"
 	},
-	"Response": {
-		"Status": 200,
-		"Headers": {
-			"Content-Type": "application/json"
+	"response": {
+		"status": 200,
+		"headers": {
+			"content-Type": "application/json"
 		},
-		"Body": {
-			"Type": "inline",
-			"Props": {
-				"Body": "{\"result\":\"true\"}"
+		"body": {
+			"type": "inline",
+			"props": {
+				"body": "{\"result\":\"true\"}"
 			}
 		},
-		"Delay": 0
+		"delay": 0
 	}
 }
 ```
@@ -97,23 +97,23 @@ With this option regular expressions can be used to match the PATH. If MockServe
 
 ```json
 {
-	"Name": "Test mock endpoint with regex",
-	"Request": {
-		"Method": "GET",
-		"PathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
+	"name": "Mock endpoint with PathRegex",
+	"request": {
+		"method": "GET",
+		"pathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
 	},
-	"Response": {
-		"Status": 200,
-		"Headers": {
-			"Content-Type": "application/json"
+	"response": {
+		"status": 200,
+		"headers": {
+			"content-Type": "application/json"
 		},
-		"Body": {
-			"Type": "inline",
-			"Props": {
-				"Body": "{\"result\":true}"
+		"body": {
+			"type": "inline",
+			"props": {
+				"body": "{\"result\":true}"
 			}
 		},
-		"Delay": 0
+		"delay": 0
 	}
 }
 ```
@@ -123,23 +123,23 @@ With PathRegex it is also possible to use all found matches and substitute the r
 
 ```json
 {
-	"Name": "Test mock endpoint with regex",
-	"Request": {
-		"Method": "GET",
-		"PathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
+	"name": "Mock endpoint with PathRegex",
+	"request": {
+		"method": "GET",
+		"pathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
 	},
-	"Response": {
-		"Status": 200,
-		"Headers": {
-			"Content-Type": "application/json"
+	"response": {
+		"status": 200,
+		"headers": {
+			"content-Type": "application/json"
 		},
-		"Body": {
-			"Type": "inline",
-			"Props": {
-				"Body": "{\"result\":{\"store\":\"$1\",\"order\":\"$2\"}}"
+		"body": {
+			"type": "inline",
+			"props": {
+				"body": "{\"result\":{\"store\":\"$1\",\"order\":\"$2\"}}"
 			}
 		},
-		"Delay": 0
+		"delay": 0
 	}
 }
 ```
@@ -147,26 +147,131 @@ With PathRegex it is also possible to use all found matches and substitute the r
 ![pathregexbody](https://user-images.githubusercontent.com/93197903/139256036-d60df6df-b684-4bc0-b173-e330e81c7c51.png)
 
 ## Response body options
-Currently three types of responses were implemented:
+At the moment, three types of responses have been implemented:
 - Inline response type
 - File response type
 - Assembly response type
 
-### Inline response
-Inline response type allows to put the response directly into mock.json file.
+### Inline response type
+Inline response type allows to define the response directly in mock.json file.
+With body type = "inline" the props "body" must be defined.
 
 ```json
-"Response": {
-		"Status": 200,
-		"Headers": {
-			"Content-Type": "application/json"
+"response": {
+        "status": 200,
+        "headers": {
+          "content-Type": "application/json"
+        },
+        "body": {
+          "type": "inline",
+          "props": {
+            "body": "{\"actor\":{\"firstName\":\"Ursula\",\"lastName\":\"Corbera\"}}"
+          }
+        },
+        "delay": 0
+      }
+```
+
+### File response type
+File response type allows to define the response inside a separate file on file system.
+With body type = "file" the props "fileName" must be defined.
+
+```json
+"response": {
+        "status": 200,
+        "headers": {
+          "content-Type": "application/json"
+        },
+        "body": {
+          "type": "file",
+          "props": {
+            "fileName": "\\responses\\orders\\035_2161190600113165.json"
+          }
+        },
+        "delay": 0
+      }
+```
+
+With using PathRegex you can also define a filename with a regular expression replacement string inside it as shown in the example below. This option allows to define different set of responses without having to modify the mock.json file
+
+```json
+{
+	"name": "Mock endpoint with file response type and PathRegex",
+	"request": {
+		"method": "GET",
+		"pathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"content-Type": "application/json"
 		},
-		"Body": {
-			"Type": "inline",
-			"Props": {
-				"Body": "{\"result\":{\"store\":\"$1\",\"order\":\"$2\"}}"
+		"body": {
+			"type": "file",
+			"props": {
+				"fileName": "\\responses\\orders\\$1_$2.json"
 			}
 		},
-		"Delay": 0
+		"delay": 0
 	}
+}
 ```
+
+### Assembly response type
+Assembly response type allows to implement the way and form of the response inside a separate assembly file (.net library) called mock plugin. Mock plugin it is a class implementing IMockPlugin interface.
+
+With body type = "assembly" the props "assembly" must be defined. Props "class" should be defined if there are more than one IMockPlugin implementations in one project. If class props is not defined the first one will be taken. Other props can be configured if plugn implementation requires them. You can pass as many props as your implementation requires.
+
+```json
+{
+	"name": "Mock Server dashboard",
+	"request": {
+		"method": "GET",
+		"path": "/"
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"content-Type": "text/html; charset=UTF-8"
+		},
+		"body": {
+			"type": "assembly",
+			"props": {
+				"assembly": "\\plugins\\dashboard\\dashboard.dll",
+				"class": "Dashboard",
+				"page": "\\responses\\dashboard\\index.html"
+			}
+		},
+		"delay": 0
+	}
+}
+```
+
+### Delay
+Mock servers often return responses faster than their real API counterparts. This is great when you just want your functional test suite to run as fast as possible, but if you’re testing your app’s UX with realistic timings, or want to check that a timeout is configured correctly then you need to be able to add artificial delay to your responses.
+
+MockServer allows you to setting up response in a way that it can have a fixed delay attached to it, such that the response will not be returned until after the specified number of milliseconds:
+
+```json
+{
+      "Name": "Test mock endpoint with 5000ms delay",
+      "Request": {
+        "Method": "GET",
+        "PathRegex": "/payment/v1/stores/(\\d+)/order/(\\d+)$"
+      },
+      "Response": {
+        "Status": 200,
+        "Headers": {
+          "Content-Type": "application/json"
+        },
+        "Body": {
+          "type": "file",
+          "props": {
+            "fileName": "\\responses\\orders\\035_2161190600113165.json"
+          }
+        },
+        "Delay": 5000
+      }
+    }
+```
+![delay](https://user-images.githubusercontent.com/93197903/139413978-35effba0-b251-494a-ba47-0d8c6c6db0d2.png)
