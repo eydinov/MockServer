@@ -432,12 +432,57 @@ When provide valid x-api-key:
 
 ![apikey_success](https://user-images.githubusercontent.com/93197903/139454533-0eadf809-0766-408d-afc8-89bf48a7f00b.png)
 
+## Multiple authentication schemas
+It is possible to combine different types of authentication schemas to protect an API. As shown in follow example API is protected with Header and Bearer authentication schemas/ First the API call will be authenticated by Header and if it passed Bearer will be triggered.
+
+```json
+{
+      "name": "Endpoint secured by x-api-key header and Bearer token",
+      "request": {
+        "method": "GET",
+        "pathRegex": "/api/weather/city/([a-zA-Z]+)$",
+        "authorization": [
+          {
+            "schema": "Header",
+            "unauthorizedStatus": 401,
+            "unauthorizedMessage": "{\"fault\":{\"faultstring\":\"Failed to resolve API Key variable request.header.x-api-key\",\"detail\":{\"errorcode\":\"steps.oauth.v2.FailedToResolveAPIKey\"}}}",
+            "claims": {
+              "x-api-key": "HFL6juGtPN8r2ZgTaimwtzU4z8tqdQic"
+            }
+          },
+	  {
+            "schema": "Bearer",
+            "unauthorizedStatus": 401,
+            "unauthorizedMessage": "HTTP Error 401 - Unauthorized: Access is denied",
+            "claims": {
+              "appid": "030f0c52-792a-4086-ab25-9565dcebd350"
+            }
+          }
+        ]
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-Type": "application/json"
+        },
+        "body": {
+          "type": "inline",
+          "props": {
+            "body": "{\"result\": \"access granted\"}"
+          }
+        },
+        "delay": 0
+      }
+    }
+```
+![multiple_auths](https://user-images.githubusercontent.com/93197903/139594071-b4538390-4518-4498-a875-b0d24c72b784.png)
+
 ## OAuth token provider
 To communicate with API secured by Bearer authentication schema application should first request an access to the API by requesting the token from token provider. MockServer does not stick to any specific provider - you are free to use any provider you want or have access to.
 
-But sometimes communication with token provider is a part of integration process and it could be happened that token provided is not accessible from the environment where you develop or test API. For such scenarios MockServer provides its own already mocked OAuth2 token provider emulator.
+But sometimes communication with token provider is a part of integration process and it could be happened that token provided is not accessible from the environment where you are developing or testing your API. For such scenarios MockServer provides its own already mocked OAuth2 token provider emulator.
 
-It has been already configured inside the mock.json file. The token endpoint can be used to programmatically request tokens.
+It has been already configured inside the mock.json file. The token endpoint can be used to programmatically request the tokens.
 
 ```json
 {
