@@ -380,7 +380,7 @@ If try to call such API without bearer token provided the HTTP Status code 401 w
 
 If provide not valid token to the response e.g. token wich has been expired or haven't passed the validation process against the Claims which were setup for the API the HTTP Status code 403 (Forbidden) will be returned.
 
-![bearer_no_token](https://user-images.githubusercontent.com/93197903/139437819-8b686e3b-703a-4de8-a2aa-e60274fc0be6.png)
+![bearer_wrong_token](https://user-images.githubusercontent.com/93197903/139593610-01929429-20b4-4149-beeb-71f19e041717.png)
 
 And eventually if token is correct and consists all expected Claims API will return the response
 
@@ -424,7 +424,7 @@ Most common use case of using header authorization is an API key. An API key is 
     }
 ```
 
-When provide not valid x-api-ke or not provide it at all:
+When provide not valid x-api-key or do not provide it at all:
 
 ![apikey_failed](https://user-images.githubusercontent.com/93197903/139454471-dfea0c46-c53f-4d88-be5e-9562f711b361.png)
 
@@ -481,11 +481,6 @@ It has been already configured inside the mock.json file. The token endpoint can
   }
 }
 ```
-
-Wrong x-api-key is provided:
-
-Correct x-api-key is provided:
-
 
 In the **request.props** object you define the list of properties which will be checked by provider during the autorization like grant_type, username, password, client_id, client_secred and others.
 In the **response.claims** you define the list of claims to be included into the token. claims collection uses **response.props** object to substitute values.
