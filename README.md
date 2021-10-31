@@ -30,7 +30,7 @@ All definitions for mocked services are stored into Configuration folder within 
 
 ```json
 {
-	"name": "Test mock movie endpoint",
+	"name": "Mock movie endpoint",
 	"request": {
 		"method": "GET",
 		"path": "/api/v1/movie/moneyheist"
@@ -69,7 +69,7 @@ With this option MockServer simply compares whether the METHOD and PATH configur
 
 ```json
 {
-	"name": "Mock movie endpoint",
+	"name": "Mock get result",
 	"request": {
 		"method": "GET",
 		"path": "/api/result"
